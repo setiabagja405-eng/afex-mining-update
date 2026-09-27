@@ -1,0 +1,66 @@
+// SHOP / DEPOSIT BNB BEP-20 (Masuk ke Web Wallet Anda dan Terekam di Web Wallet Page)
+        function openDepositModal(addedHs, priceUsdt) {
+            const modal = document.getElementById('general-modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body');
+            modal.style.display = 'flex';
+
+            const myBnbWallet = "0xC05Bfc692C8dDC21ad46Fb0038A1fAB67f206685";
+
+            title.innerText = "Pembelian Hash Rate (+" + addedHs + " HS)";
+            body.innerHTML = `
+                <p class="text-gray-300 mb-2">Kirim minimal <b class="text-yellow-400">$${priceUsdt} USDT / BNB (BEP-20)</b> ke alamat dompet Anda:</p>
+                <div class="bg-[#090d16] p-2 rounded-lg font-mono text-[10px] text-cyan-300 break-all mb-3 border border-gray-800 select-all">${myBnbWallet}</div>
+                <p class="text-[10px] text-gray-400 mb-4">Setelah transfer dari dompet web Anda, klik konfirmasi di bawah untuk memproses penambahan Hash Rate dan mencatat saldo ke Web Wallet.</p>
+                <button onclick="confirmWalletPayment(${addedHs}, ${priceUsdt})" class="w-full bg-green-500 text-black font-bold py-2.5 rounded-xl text-xs cursor-pointer mb-2">
+                    Konfirmasi Pembayaran
+                </button>
+            `;
+        }
+
+        function confirmWalletPayment(addedHs, priceUsdt) {
+            alert("Memverifikasi transaksi blockchain BEP-20...");
+            setTimeout(() => {
+                userData.hashRate += addedHs;
+                userData.walletUsdt += priceUsdt; // Masuk & tercatat di Web Wallet user
+                localStorage.setItem('miner_hs', userData.hashRate);
+                updateUI();
+                closeModal();
+                alert("Berhasil! Hash Rate bertambah +" + addedHs + " HS/s dan saldo terupdate di Web Wallet.");
+            }, 1500);
+        }
+
+        // PROFILE ACTIONS (Transfer min 100, Deposit, Swap Coming Soon)
+        function openActionModal(actionType) {
+            const modal = document.getElementById('general-modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body');
+            modal.style.display = 'flex';
+
+            if(actionType === 'transfer') {
+                title.innerText = "Kirim / Transfer Token (Min. 100)";
+                body.innerHTML = `
+                    <p class="text-[11px] text-gray-400 mb-2">Syarat Minimum Withdraw: <b class="text-yellow-400">100 Token</b></p>
+                    <input type="text" id="transfer-uid" placeholder="UID Tujuan (Cth: MINER-XXXXXX)" class="w-full bg-[#090d16] border border-gray-700 rounded-lg p-2.5 text-xs mb-2 text-white">
+                    <input type="number" id="transfer-amount" placeholder="Jumlah Token" class="w-full bg-[#090d16] border border-gray-700 rounded-lg p-2.5 text-xs mb-3 text-white">
+                    <button onclick="processTransfer()" class="w-full bg-cyan-500 text-black font-bold py-2.5 rounded-xl text-xs cursor-pointer">Kirim Token</button>
+                `;
+            } else if(actionType === 'deposit') {
+                const myBnbWallet = "0xC05Bfc692C8dDC21ad46Fb0038A1fAB67f206685";
+                title.innerText = "Deposit BNB BEP-20 (Min $1)";
+                body.innerHTML = `
+                    <p class="mb-2 text-gray-400 text-left">Kirim minimal $1 USDT / BNB via jaringan <b>BNB Smart Chain (BEP-20)</b>:</p>
+                    <div class="bg-[#090d16] p-2.5 rounded-lg font-mono text-[10px] text-cyan-300 break-all mb-3 border border-gray-800 select-all">${myBnbWallet}</div>
+                    <button onclick="alert('Alamat disalin!'); closeModal();" class="w-full bg-green-500 text-black font-bold py-2.5 rounded-xl text-xs cursor-pointer">Salin Alamat</button>
+                `;
+            } else if(actionType === 'swap') {
+                title.innerText = "Swap Token ke USDT";
+                body.innerHTML = `
+                    <div class="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl mb-3 text-yellow-400 text-xs font-bold">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Fitur SWAP Masih Coming Soon!
+                    </div>
+                    <p class="text-gray-400 text-xs mb-3">Fitur swap otomatis akan diaktifkan setelah token resmi listing di market.</p>
+                    <input type="number" placeholder="Jumlah Token" disabled class="w-full bg-[#090d16] border border-gray-700 rounded-lg p-2.5 text-xs mb-3 text-gray-600 cursor-not-allowed">
+                `;
+            }
+        }
